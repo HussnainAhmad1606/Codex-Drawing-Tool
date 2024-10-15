@@ -1,23 +1,23 @@
 "use client"
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useUserStore } from '@/store/store';
 function ImageEditor() {
   const canvasRef = useRef(null);
   const [drawing, setDrawing] = useState(false);
   const [text, setText] = useState("");
   const [selectedColor, setSelectedColor] = useState("#000000");
-  const currentTool = useUserStore((state:any) => state.currentTool);
+  const currentTool = useUserStore((state) => state.currentTool);
   const [currentShape, setCurrentShape] = useState('rectangle');
   const [brushStroke, setBrushStroke] = useState(0);
 
-  const [textPosition, setTextPosition] = useState({ x: 100, y: 100 }); // Initial text position
+  const [textPosition, setTextPosition] = useState({ x: 100, y: 100 });
  
   const [startPosition, setStartPosition] = useState({ x: 0, y: 0 });
   const [image, setImage] = useState<string | null>(null);
   const [savedImage, setSavedImage] = useState<string | null>(null);
 
 
-  const handleFileChange = (e:any) => {
+  const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
@@ -29,14 +29,7 @@ function ImageEditor() {
     // document.getElementById("loadCanvasBtn")?.click();
   };
 
-  const drawShape = (
-    ctx: CanvasRenderingContext2D,
-    tool: string,
-    startX: number,
-    startY: number,
-    currentX: number,
-    currentY: number
-  ) => {
+  const drawShape = () => {
     const width = currentX - startX;
     const height = currentY - startY;
 
@@ -87,7 +80,7 @@ function ImageEditor() {
   };
 
 
-  const startDrawing = (e: React.MouseEvent<HTMLCanvasElement>) => {
+  const startDrawing = (e) => {
     setDrawing(true);
     const ctx = canvasRef.current?.getContext('2d');
     const { offsetX, offsetY } = e.nativeEvent;
@@ -99,13 +92,13 @@ function ImageEditor() {
     }
   };
 
-  const draw = (e: React.MouseEvent<HTMLCanvasElement>) => {
+  const draw = (e) => {
     if (!drawing) return;
     const ctx = canvasRef.current?.getContext('2d');
     const { offsetX, offsetY } = e.nativeEvent;
 
     if (ctx && currentTool === 'Shape') {
-      // Save the canvas state (including previously drawn image)
+      // Save the canvas state
       if (savedImage) {
         const img = new Image();
         img.src = savedImage;
@@ -132,23 +125,13 @@ function ImageEditor() {
     const ctx = canvasRef.current?.getContext('2d');
 
     if (ctx) {
-      // Save the current state of the canvas (including image and any shapes)
+      // Save the current state of the canvas
       const savedData = canvasRef.current.toDataURL();
       setSavedImage(savedData);
     }
   };
 
-  const loadImageToCanvas = () => {
-    const ctx = canvasRef.current?.getContext('2d');
-    const img = new Image();
-    if (image && ctx && canvasRef.current) {
-      img.src = image;
-      img.onload = () => {
-        ctx.drawImage(img, 0, 0, canvasRef.current.width, canvasRef.current.height);
-        setSavedImage(canvasRef.current.toDataURL()); // Save the initial image
-      };
-    }
-  };
+ 
   // Add text to the canvas
   const addTextToCanvas = () => {
     const ctx = canvasRef.current.getContext('2d');
@@ -159,12 +142,12 @@ function ImageEditor() {
 
 
   
-  
-  const brushSizeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const brushSizeChange = (e) => {
     console.log("Brush stroke change: ", e.target.value)
     setBrushStroke(Number(e.target.value)); // Update state with new value
   };
 
+  
   const clearCanvas = () => {
     const ctx = canvasRef.current?.getContext('2d');
     if (ctx) {
