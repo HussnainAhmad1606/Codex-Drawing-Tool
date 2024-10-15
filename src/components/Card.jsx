@@ -13,8 +13,8 @@ function ImageEditor() {
   const [textPosition, setTextPosition] = useState({ x: 100, y: 100 });
  
   const [startPosition, setStartPosition] = useState({ x: 0, y: 0 });
-  const [image, setImage] = useState<string | null>(null);
-  const [savedImage, setSavedImage] = useState<string | null>(null);
+  const [image, setImage] = useState(null);
+  const [savedImage, setSavedImage] = useState(null);
 
 
   const handleFileChange = (e) => {
@@ -147,7 +147,7 @@ function ImageEditor() {
     setBrushStroke(Number(e.target.value)); // Update state with new value
   };
 
-  
+
   const clearCanvas = () => {
     const ctx = canvasRef.current?.getContext('2d');
     if (ctx) {
